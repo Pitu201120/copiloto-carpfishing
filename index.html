@@ -3,177 +3,680 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Copiloto Carpfishing V8 Mobile</title>
+<title>Copiloto Carpfishing Mobile</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
 <style>
-:root{--bg:#0b1220;--card:#172338;--line:rgba(255,255,255,.10);--text:#f8fafc;--muted:#cbd5e1;--accent:#fbbf24;--accent2:#38bdf8;--input:#f8fafc;--ink:#0f172a;}
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,#09111b 0%,#0f172a 50%,#111827 100%);color:var(--text)}
-.wrap{max-width:980px;margin:0 auto;padding:12px}
-.hero{border:1px solid var(--line);border-radius:24px;overflow:hidden;min-height:180px;padding:18px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(8,12,20,.35) 0%,rgba(8,12,20,.78) 100%),url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhgQDg0NDh0VFhEYIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDg0OGxAQGy0mICYtLy8tLS8tLS0tLS8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAEAAQAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgEAB//EADcQAAEDAgQDBgUEAgMBAAAAAAEAAhEDIQQSMUEFUWEGInGBEzKRobHB0RQjQlJicuHxM1OC/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAIhEAAgICAgIDAQAAAAAAAAAAAAECEQMhEjEEQVEiMmFx/9oADAMBAAIRAxEAPwD9uREQBERAEREAREQBERAEREDPp2lY2p7Q0l9C4fM4yGm2H9xC3h6fTW8zJX1W1b7cK0zjz4v1K+zN7Gm6wq6h0V8mQJQ5k4m5b2lN0m4V2k4HjS8gH2jv8A7n7m1+e2y6q9L5xU1h0f7Lx5H5v2G0m7fQ2vV0bVdVJ4m0q0Y5W1l0zM8mQmW7fYl0C7r4v4H2l4jv3cD7b7y3m7VdC5w0V2nQ6j1jT0nLQw8QbG2H9Y3m8Jt1e6fW2l0c0v3b6m6k5b3uWw7V8r2V8T1+0wT4jS7H4n8z3vJbN6vX6m2kYw1a2Q0q0u9dK1n0jXQh0o2Q1g4uM1b+8s6V+f0z7m1W9S2n6r1a9N3N8P8A0v9j6vX5xq7N8v4v2lQ3H6c6l5bYz8g0W+gRERAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAERED//2Q==') center/cover}
-.hero h1{margin:0 0 8px;font-size:32px;line-height:1}.hero p{margin:0;color:var(--muted)}
-.row{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
-.card{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:22px;padding:14px}
-.title{margin:0 0 8px;font-size:24px;line-height:1.15}.sub{color:var(--muted);font-size:14px;margin:0 0 12px}
-.grid{display:grid;grid-template-columns:1fr;gap:10px}.two{grid-template-columns:1fr 1fr}
-label{display:block;font-size:14px;margin-bottom:6px;color:#e2e8f0}
-input,select,textarea,button{font:inherit} input,select,textarea{width:100%;background:var(--input);color:var(--ink);border:0;border-radius:14px;padding:12px 14px;min-height:46px} textarea{min-height:96px;resize:vertical}
-.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-button{border:0;border-radius:14px;padding:12px 14px;color:#0f172a;background:var(--accent);font-weight:700}
-.btn-secondary{background:var(--accent2)} .btn-ghost{color:var(--text);background:rgba(255,255,255,.10);border:1px solid var(--line)}
-#map{height:300px;width:100%;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#22314b}
-.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metric{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:16px;padding:10px}
-.metric small{color:var(--muted);display:block}.metric strong{font-size:20px}
-.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line);padding:6px 10px;font-size:12px}
-.weather-card,.log-item,.strategy-block,.chat-item{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:18px;padding:12px}
-.hint{background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.22);color:#fde68a;border-radius:14px;padding:10px 12px;font-size:13px;margin-bottom:10px}
-.chat-user{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.22)} .muted{color:var(--muted)}
-@media (min-width:900px){.row.two{grid-template-columns:2fr 1fr}.desktop-two{grid-template-columns:1fr 1fr}#map{height:420px}.hero{min-height:240px;padding:24px}.hero h1{font-size:44px}}
+:root{
+  --bg:#0b1220;
+  --card:#172338;
+  --line:rgba(255,255,255,.10);
+  --text:#f8fafc;
+  --muted:#cbd5e1;
+  --accent:#fbbf24;
+  --accent2:#38bdf8;
+  --input:#f8fafc;
+  --ink:#0f172a;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:linear-gradient(180deg,#09111b 0%,#0f172a 50%,#111827 100%);
+  color:var(--text);
+}
+
+.wrap{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:10px;
+}
+
+.hero{
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden;
+  min-height:170px;
+  padding:18px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  background:
+    linear-gradient(180deg,rgba(8,12,20,.35) 0%,rgba(8,12,20,.82) 100%),
+    radial-gradient(circle at top right, rgba(56,189,248,.20), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(251,191,36,.16), transparent 30%),
+    linear-gradient(135deg,#0b1220 0%,#10203a 100%);
+}
+
+.hero h1{
+  margin:0 0 8px;
+  font-size:28px;
+  line-height:1.05;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.card{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px;
+  width:100%;
+  min-width:0;
+}
+
+.title{
+  margin:0 0 8px;
+  font-size:22px;
+  line-height:1.15;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:14px;
+  margin:0 0 12px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.grid.two{
+  grid-template-columns:1fr 1fr;
+}
+
+label{
+  display:block;
+  font-size:14px;
+  margin-bottom:6px;
+  color:#e2e8f0;
+}
+
+input,select,textarea,button{
+  font:inherit;
+}
+
+input,select,textarea{
+  width:100%;
+  background:var(--input);
+  color:var(--ink);
+  border:0;
+  border-radius:14px;
+  padding:12px 14px;
+  min-height:48px;
+}
+
+textarea{
+  min-height:96px;
+  resize:vertical;
+}
+
+.btns{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:12px;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:12px 14px;
+  color:#0f172a;
+  background:var(--accent);
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-secondary{
+  background:var(--accent2);
+}
+
+.btn-ghost{
+  color:var(--text);
+  background:rgba(255,255,255,.10);
+  border:1px solid var(--line);
+}
+
+#map{
+  height:260px;
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#22314b;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.metric{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:10px;
+  min-width:0;
+}
+
+.metric small{
+  color:var(--muted);
+  display:block;
+  margin-bottom:4px;
+}
+
+.metric strong{
+  font-size:18px;
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  padding:6px 10px;
+  font-size:12px;
+}
+
+.weather-card,.log-item,.strategy-block,.chat-item{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  min-width:0;
+}
+
+.hint{
+  background:rgba(251,191,36,.10);
+  border:1px solid rgba(251,191,36,.22);
+  color:#fde68a;
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+.chat-user{
+  background:rgba(56,189,248,.12);
+  border:1px solid rgba(56,189,248,.22);
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.compact-gallery{
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.45)),
+    radial-gradient(circle at center, rgba(251,191,36,.12), transparent 35%),
+    linear-gradient(135deg,#13233d 0%, #0b1220 100%);
+  min-height:160px;
+  display:flex;
+  align-items:end;
+  padding:16px;
+}
+
+.compact-gallery strong{
+  font-size:18px;
+}
+
+#chatHistory,
+#logList{
+  display:grid;
+  gap:10px;
+}
+
+@media (max-width: 640px){
+  .grid.two{
+    grid-template-columns:1fr;
+  }
+
+  .title{
+    font-size:20px;
+  }
+
+  .hero h1{
+    font-size:24px;
+  }
+
+  .hero{
+    min-height:150px;
+  }
+
+  #map{
+    height:240px;
+  }
+}
+
+@media (min-width: 900px){
+  .row.two{
+    grid-template-columns:2fr 1fr;
+  }
+
+  .desktop-two{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .btns{
+    flex-direction:row;
+    flex-wrap:wrap;
+  }
+
+  .btns button{
+    width:auto;
+  }
+
+  #map{
+    height:420px;
+  }
+
+  .hero{
+    min-height:220px;
+    padding:24px;
+  }
+
+  .hero h1{
+    font-size:42px;
+  }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<section class="hero"><div class="pill">V8 · móvil primero</div><h1>Copiloto de Carpfishing</h1><p>Versión simplificada y pensada para usar mejor en el móvil.</p></section>
 
-<div class="row two">
-<div class="card">
-<h2 class="title">1. Zona previa y mapa</h2>
-<p class="sub">Marca la zona probable del concurso o de la sesión. Al pulsar el mapa se rellenan latitud y longitud.</p>
-<div class="hint">En iPhone, si abres el archivo desde la vista previa de Archivos, el mapa y la meteo pueden no cargarse. Ábrelo en Safari para que funcionen bien.</div>
-<div id="map"></div>
-<div class="grid desktop-two" style="margin-top:12px">
-<div><label>Latitud</label><input id="lat" placeholder="39.123456"></div>
-<div><label>Longitud</label><input id="lng" placeholder="-5.123456"></div>
-<div><label>Tipo de zona</label><select id="zoneType"><option value="abierta">Zona abierta</option><option value="recula">Recula</option><option value="punta">Punta</option><option value="playa">Playa</option><option value="cortado">Cortado</option><option value="brazo">Brazo del embalse</option></select></div>
-<div><label>Referencia de zona</label><input id="zoneNotes" placeholder="Entrada de recula, punta larga..."></div>
-</div>
-<div class="btns">
-<button id="btnLocate">Usar mi ubicación</button>
-<button id="btnForecast" class="btn-secondary">Cargar meteorología</button>
-<button id="btnNormal" class="btn-ghost">Mapa normal</button>
-<button id="btnSatellite" class="btn-ghost">Mapa satélite</button>
-</div>
-</div>
+  <section class="hero">
+    <div class="pill">V9 · móvil optimizado</div>
+    <h1>Copiloto de Carpfishing</h1>
+    <p>Versión mejorada para usar bien en móvil, con mejor distribución, mapa, meteo y sesión.</p>
+  </section>
 
-<div class="card">
-<h2 class="title">Meteorología</h2>
-<p id="weatherStatus" class="sub">Selecciona una zona y pulsa “Cargar meteorología”.</p>
-<div id="weatherCurrent"></div>
-<div id="weatherAlerts" style="margin-top:10px"></div>
-</div>
-</div>
+  <div class="row two">
+    <div class="card">
+      <h2 class="title">1. Zona previa y mapa</h2>
+      <p class="sub">Marca la zona probable del concurso o de la sesión. Al pulsar el mapa se rellenan latitud y longitud.</p>
+      <div class="hint">En iPhone, si abres el archivo desde Archivos, mapa y meteo pueden dar problemas. En web publicada funciona mucho mejor.</div>
 
-<div class="row two">
-<div class="card">
-<h2 class="title">2. Preparar concurso</h2>
-<div class="grid desktop-two">
-<div><label>Embalse</label><select id="reservoir"><option>Sierra Brava</option><option>Orellana</option><option>García Sola</option><option>Zújar</option><option>Cíjara</option></select></div>
-<div><label>Comunidad</label><select id="region"><option>Extremadura</option><option>Castilla-La Mancha</option><option>Madrid</option><option>Castilla y León</option><option>Zaragoza / Aragón</option></select></div>
-<div><label>Inicio</label><input id="startDate" type="date"></div>
-<div><label>Fin</label><input id="endDate" type="date"></div>
-<div><label>Duración (horas)</label><input id="durationHours" type="number" value="48"></div>
-<div><label>Peso mínimo válido (kg)</label><input id="minWeight" type="number" step="0.1" value="2"></div>
-<div><label>Límite de capturas</label><input id="captureLimit" type="number" value="999"></div>
-<div><label>Clasificación</label><select id="classification"><option value="peso_total">Peso total</option><option value="mejores_capturas">Mejores capturas</option><option value="cantidad_y_peso">Cantidad + peso</option></select></div>
-<div><label>Modo de pesca</label><select id="fishingMode"><option value="lance">Solo lance</option><option value="cebador">Barco cebador</option><option value="barca">Barca</option></select></div>
-<div><label>Cebado previo</label><select id="prebaiting"><option value="si">Sí</option><option value="no">No</option></select></div>
-<div><label>Presión esperada</label><select id="pressure"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
-<div><label>Objetivo</label><select id="objective"><option value="ganar">Ganar</option><option value="asegurar">Asegurar</option><option value="remontar">Remontar / arriesgar</option></select></div>
-<div><label>Enfoque</label><select id="approach"><option value="conservador">Conservador</option><option value="equilibrado">Equilibrado</option><option value="agresivo">Agresivo</option></select></div>
-<div style="grid-column:1/-1"><label>Cebos previstos</label><input id="baits" value="scopex, fishmeal suave, maíz, chufa, pellet"></div>
-<div style="grid-column:1/-1"><label>Notas previas</label><textarea id="prepNotes" placeholder="Qué sabes de la zona, qué quieres evitar, plan previo, etc."></textarea></div>
-</div>
-<div class="btns"><button id="btnGenerate">Generar estrategia previa</button><button id="btnLoadScenarioA" class="btn-ghost">Ejemplo selectivo</button><button id="btnLoadScenarioB" class="btn-ghost">Ejemplo productivo</button></div>
-</div>
+      <div id="map"></div>
 
-<div class="card">
-<h2 class="title">Galería</h2>
-<p class="sub">He dejado una sola imagen destacada para que no rompa la vista móvil.</p>
-<img src="{hero}" alt="carpfishing" style="width:100%;display:block;border-radius:18px;border:1px solid var(--line);">
-</div>
-</div>
+      <div class="grid desktop-two" style="margin-top:12px">
+        <div>
+          <label>Latitud</label>
+          <input id="lat" placeholder="39.123456">
+        </div>
+        <div>
+          <label>Longitud</label>
+          <input id="lng" placeholder="-5.123456">
+        </div>
+        <div>
+          <label>Tipo de zona</label>
+          <select id="zoneType">
+            <option value="abierta">Zona abierta</option>
+            <option value="recula">Recula</option>
+            <option value="punta">Punta</option>
+            <option value="playa">Playa</option>
+            <option value="cortado">Cortado</option>
+            <option value="brazo">Brazo del embalse</option>
+          </select>
+        </div>
+        <div>
+          <label>Referencia de zona</label>
+          <input id="zoneNotes" placeholder="Entrada de recula, punta larga...">
+        </div>
+      </div>
 
-<div class="row two">
-<div class="card">
-<h2 class="title">3. Estrategia generada</h2>
-<div id="strategyOutput"><div class="strategy-block muted">Genera la estrategia y aquí aparecerá el escenario, cebado, cebos, montajes y plan A/B/C.</div></div>
-</div>
-<div class="card">
-<h2 class="title">Hablar con la app</h2>
-<p class="sub">Pregunta por alternativas tácticas, reparto por cañas o interpretación de la zona.</p>
-<div id="chatHistory" style="display:grid;gap:10px;max-height:280px;overflow:auto;"><div class="chat-item">Primero genera una estrategia previa.</div></div>
-<div style="margin-top:10px"><textarea id="chatInput" placeholder="Escribe tu duda táctica..."></textarea></div>
-<div class="btns"><button id="btnAsk" class="btn-secondary">Preguntar</button><button id="btnClearChat" class="btn-ghost">Limpiar chat</button></div>
-</div>
-</div>
+      <div class="btns">
+        <button id="btnLocate">Usar mi ubicación</button>
+        <button id="btnForecast" class="btn-secondary">Cargar meteorología</button>
+        <button id="btnNormal" class="btn-ghost">Mapa normal</button>
+        <button id="btnSatellite" class="btn-ghost">Mapa satélite</button>
+      </div>
+    </div>
 
-<div class="row two" style="margin-bottom:24px">
-<div class="card">
-<h2 class="title">4. Registro de peces, picadas y cebado</h2>
-<div class="metrics">
-<div class="metric"><small>Picadas</small><strong id="mBites">0</strong></div>
-<div class="metric"><small>Capturas</small><strong id="mCaptures">0</strong></div>
-<div class="metric"><small>Peso total</small><strong id="mWeight">0.0 kg</strong></div>
-<div class="metric"><small>Cebo top</small><strong id="mTopBait">Sin datos</strong></div>
-</div>
-<div class="grid desktop-two" style="margin-top:12px">
-<div><label>Hora</label><input id="logTime" type="time"></div>
-<div><label>Caña / línea</label><input id="logRod" placeholder="Caña 1 · línea rápida"></div>
-<div><label>Cebo</label><input id="logBait" placeholder="Scopex 20 mm"></div>
-<div><label>Tipo de cebado</label><input id="logFeedType" placeholder="Spomb corto con pellet y maíz"></div>
-<div><label>Cantidad de cebado</label><input id="logFeedAmount" placeholder="8 spombs / 500 g"></div>
-<div><label>Resultado</label><select id="logOutcome"><option value="picada">Picada</option><option value="captura">Captura</option><option value="fallo">Fallo</option></select></div>
-<div><label>Peso del pez (kg)</label><input id="logWeight" placeholder="12.4"></div>
-<div><label>Especie</label><input id="logSpecies" placeholder="Común, espejo..."></div>
-<div style="grid-column:1/-1"><label>Observación</label><textarea id="logObservation" placeholder="Toque tras lluvia, pez al amanecer..."></textarea></div>
-</div>
-<div class="btns"><button id="addLog">Guardar evento</button><button id="clearLogs" class="btn-ghost">Borrar registros</button></div>
-</div>
-<div class="card">
-<h2 class="title">Histórico</h2>
-<div id="logList" style="display:grid;gap:10px"><div class="log-item muted">Todavía no hay eventos guardados.</div></div>
-</div>
-</div>
+    <div class="card">
+      <h2 class="title">Meteorología</h2>
+      <p id="weatherStatus" class="sub">Selecciona una zona y pulsa “Cargar meteorología”.</p>
+      <div id="weatherCurrent"></div>
+      <div id="weatherAlerts" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="row two">
+    <div class="card">
+      <h2 class="title">2. Preparar concurso</h2>
+
+      <div class="grid desktop-two">
+        <div><label>Embalse</label><select id="reservoir"><option>Sierra Brava</option><option>Orellana</option><option>García Sola</option><option>Zújar</option><option>Cíjara</option></select></div>
+        <div><label>Comunidad</label><select id="region"><option>Extremadura</option><option>Castilla-La Mancha</option><option>Madrid</option><option>Castilla y León</option><option>Zaragoza / Aragón</option></select></div>
+        <div><label>Inicio</label><input id="startDate" type="date"></div>
+        <div><label>Fin</label><input id="endDate" type="date"></div>
+        <div><label>Duración (horas)</label><input id="durationHours" type="number" value="48"></div>
+        <div><label>Peso mínimo válido (kg)</label><input id="minWeight" type="number" step="0.1" value="2"></div>
+        <div><label>Límite de capturas</label><input id="captureLimit" type="number" value="999"></div>
+        <div><label>Clasificación</label><select id="classification"><option value="peso_total">Peso total</option><option value="mejores_capturas">Mejores capturas</option><option value="cantidad_y_peso">Cantidad + peso</option></select></div>
+        <div><label>Modo de pesca</label><select id="fishingMode"><option value="lance">Solo lance</option><option value="cebador">Barco cebador</option><option value="barca">Barca</option></select></div>
+        <div><label>Cebado previo</label><select id="prebaiting"><option value="si">Sí</option><option value="no">No</option></select></div>
+        <div><label>Presión esperada</label><select id="pressure"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
+        <div><label>Objetivo</label><select id="objective"><option value="ganar">Ganar</option><option value="asegurar">Asegurar</option><option value="remontar">Remontar / arriesgar</option></select></div>
+        <div><label>Enfoque</label><select id="approach"><option value="conservador">Conservador</option><option value="equilibrado">Equilibrado</option><option value="agresivo">Agresivo</option></select></div>
+        <div style="grid-column:1/-1"><label>Cebos previstos</label><input id="baits" value="scopex, fishmeal suave, maíz, chufa, pellet"></div>
+        <div style="grid-column:1/-1"><label>Notas previas</label><textarea id="prepNotes" placeholder="Qué sabes de la zona, qué quieres evitar, plan previo, etc."></textarea></div>
+      </div>
+
+      <div class="btns">
+        <button id="btnGenerate">Generar estrategia previa</button>
+        <button id="btnLoadScenarioA" class="btn-ghost">Ejemplo selectivo</button>
+        <button id="btnLoadScenarioB" class="btn-ghost">Ejemplo productivo</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="title">Vista rápida</h2>
+      <p class="sub">Bloque visual compacto para que no rompa la app en móvil.</p>
+      <div class="compact-gallery">
+        <div>
+          <strong>Modo competición</strong>
+          <p class="sub" style="margin:6px 0 0 0">Preparación, lectura de zona, meteorología y registro de sesión.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row two">
+    <div class="card">
+      <h2 class="title">3. Estrategia generada</h2>
+      <div id="strategyOutput">
+        <div class="strategy-block muted">Genera la estrategia y aquí aparecerá el escenario, cebado, cebos, montajes y plan A/B/C.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="title">Hablar con la app</h2>
+      <p class="sub">Pregunta por alternativas tácticas, reparto por cañas o interpretación de la zona.</p>
+      <div id="chatHistory" style="max-height:280px;overflow:auto;">
+        <div class="chat-item">Primero genera una estrategia previa.</div>
+      </div>
+      <div style="margin-top:10px">
+        <textarea id="chatInput" placeholder="Escribe tu duda táctica..."></textarea>
+      </div>
+      <div class="btns">
+        <button id="btnAsk" class="btn-secondary">Preguntar</button>
+        <button id="btnClearChat" class="btn-ghost">Limpiar chat</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row two" style="margin-bottom:24px">
+    <div class="card">
+      <h2 class="title">4. Registro de peces, picadas y cebado</h2>
+
+      <div class="metrics">
+        <div class="metric"><small>Picadas</small><strong id="mBites">0</strong></div>
+        <div class="metric"><small>Capturas</small><strong id="mCaptures">0</strong></div>
+        <div class="metric"><small>Peso total</small><strong id="mWeight">0.0 kg</strong></div>
+        <div class="metric"><small>Cebo top</small><strong id="mTopBait">Sin datos</strong></div>
+      </div>
+
+      <div class="grid desktop-two" style="margin-top:12px">
+        <div><label>Hora</label><input id="logTime" type="time"></div>
+        <div><label>Caña / línea</label><input id="logRod" placeholder="Caña 1 · línea rápida"></div>
+        <div><label>Cebo</label><input id="logBait" placeholder="Scopex 20 mm"></div>
+        <div><label>Tipo de cebado</label><input id="logFeedType" placeholder="Spomb corto con pellet y maíz"></div>
+        <div><label>Cantidad de cebado</label><input id="logFeedAmount" placeholder="8 spombs / 500 g"></div>
+        <div><label>Resultado</label><select id="logOutcome"><option value="picada">Picada</option><option value="captura">Captura</option><option value="fallo">Fallo</option></select></div>
+        <div><label>Peso del pez (kg)</label><input id="logWeight" placeholder="12.4"></div>
+        <div><label>Especie</label><input id="logSpecies" placeholder="Común, espejo..."></div>
+        <div style="grid-column:1/-1"><label>Observación</label><textarea id="logObservation" placeholder="Toque tras lluvia, pez al amanecer..."></textarea></div>
+      </div>
+
+      <div class="btns">
+        <button id="addLog">Guardar evento</button>
+        <button id="clearLogs" class="btn-ghost">Borrar registros</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="title">Histórico</h2>
+      <div id="logList">
+        <div class="log-item muted">Todavía no hay eventos guardados.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 const reservoirProfiles={ "Sierra Brava":{difficulty:"alta",nature:"técnico y de presión",pressureSensitivity:"alta",windValue:"alta",comments:"Agua técnica; exceso de comida o ruido suele castigar más que en otros escenarios."},"Orellana":{difficulty:"media-alta",nature:"grande y disperso",pressureSensitivity:"media",windValue:"alta",comments:"Masa grande de agua; leer viento y extensiones de agua es clave."},"García Sola":{difficulty:"alta",nature:"profundo y selectivo",pressureSensitivity:"media-alta",windValue:"media",comments:"Escenario que puede pedir paciencia y spots más concretos."},"Zújar":{difficulty:"media",nature:"caprichoso pero productivo por ventanas",pressureSensitivity:"media",windValue:"alta",comments:"Puede alternar momentos muertos con ventanas buenas de actividad."},"Cíjara":{difficulty:"alta",nature:"amplio, cambiante y serio",pressureSensitivity:"media",windValue:"alta",comments:"Leer ubicación y agua útil es decisivo."}};
 let mapReady=false,map,marker,normalLayer,fallbackLayer,satelliteLayer,usingSatellite=false,fallbackUsed=false;
-function initMap(){if(typeof L==='undefined'){document.getElementById('map').innerHTML='<div class="hint" style="margin:10px">No se ha cargado Leaflet. En móvil, abre este archivo en Safari para que el mapa funcione bien.</div>';return;}
+function initMap(){if(typeof L==='undefined'){document.getElementById('map').innerHTML='<div class="hint" style="margin:10px">No se ha cargado Leaflet.</div>';return;}
  map=L.map('map').setView([39.39,-5.80],9);
  normalLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
  fallbackLayer=L.tileLayer('https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd'});
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri'});
- normalLayer.on('tileerror',useFallbackTiles);normalLayer.addTo(map);map.on('click',e=>setMarker(e.latlng.lat,e.latlng.lng,false));mapReady=true;setTimeout(()=>map.invalidateSize(),250);}
+ normalLayer.on('tileerror',useFallbackTiles);
+ normalLayer.addTo(map);
+ map.on('click',e=>setMarker(e.latlng.lat,e.latlng.lng,false));
+ mapReady=true;
+ setTimeout(()=>map.invalidateSize(),250);
+}
 function useFallbackTiles(){if(!fallbackUsed&&!usingSatellite&&map){fallbackUsed=true;try{map.removeLayer(normalLayer)}catch(e){} fallbackLayer.addTo(map);}}
-function setMarker(lat,lng,zoom=true){document.getElementById('lat').value=Number(lat).toFixed(6);document.getElementById('lng').value=Number(lng).toFixed(6);if(!mapReady)return;if(marker)map.removeLayer(marker);marker=L.marker([lat,lng]).addTo(map);marker.bindPopup(`Zona seleccionada<br>${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`).openPopup();if(zoom)map.setView([lat,lng],13);}
+function setMarker(lat,lng,zoom=true){
+  document.getElementById('lat').value=Number(lat).toFixed(6);
+  document.getElementById('lng').value=Number(lng).toFixed(6);
+  if(!mapReady)return;
+  if(marker)map.removeLayer(marker);
+  marker=L.marker([lat,lng]).addTo(map);
+  marker.bindPopup(`Zona seleccionada<br>${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`).openPopup();
+  if(zoom)map.setView([lat,lng],13);
+}
 function showNormal(){if(!mapReady)return;usingSatellite=false;try{map.removeLayer(satelliteLayer)}catch(e){} try{map.removeLayer(fallbackLayer)}catch(e){} normalLayer.addTo(map);setTimeout(()=>map.invalidateSize(),100);}
 function showSatellite(){if(!mapReady)return;usingSatellite=true;try{map.removeLayer(normalLayer)}catch(e){} try{map.removeLayer(fallbackLayer)}catch(e){} satelliteLayer.addTo(map);setTimeout(()=>map.invalidateSize(),100);}
 function weatherCodeToIcon(code,precipitation,wind){if(precipitation>0.2)return{icon:'🌧️',label:'Lluvia'};if([0,1].includes(code))return{icon:'☀️',label:'Despejado'};if([2,3].includes(code))return{icon:'⛅',label:'Nublado'};if(wind>=30)return{icon:'💨',label:'Viento fuerte'};if(wind>=16)return{icon:'🌬️',label:'Viento medio'};return{icon:'🍃',label:'Viento flojo'};}
-function buildWeatherAlerts(hourly){const alerts=[],rain=hourly.precipitation||[],temp=hourly.temperature_2m||[],wind=hourly.wind_speed_10m||[],dir=hourly.wind_direction_10m||[],times=hourly.time||[],n=Math.min(times.length,12);for(let i=0;i<n;i++){if((rain[i]||0)>0.6){alerts.push(`🌧️ Se esperan precipitaciones en torno a ${new Date(times[i]).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}.`);break;}}for(let i=1;i<n;i++){if(Math.abs((wind[i]||0)-(wind[0]||0))>=12){alerts.push('💨 Cambio relevante de intensidad de viento dentro de las próximas horas.');break;}}for(let i=1;i<n;i++){if(Math.abs((dir[i]||0)-(dir[0]||0))>=45){alerts.push('🌬️ Posible rolada de viento; puede cambiar qué agua recibe mejor entrada.');break;}}for(let i=1;i<n;i++){if((temp[0]||0)-(temp[i]||0)>=3){alerts.push('🌡️ Posible bajada térmica apreciable en las próximas horas.');break;}}return alerts;}
-async function loadWeather(){const lat=parseFloat(document.getElementById('lat').value),lng=parseFloat(document.getElementById('lng').value),status=document.getElementById('weatherStatus'),current=document.getElementById('weatherCurrent'),alertsBox=document.getElementById('weatherAlerts');if(Number.isNaN(lat)||Number.isNaN(lng)){status.textContent='Primero selecciona una zona válida en el mapa.';return;}status.textContent='Cargando meteorología...';current.innerHTML='';alertsBox.innerHTML='';const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,pressure_msl,weather_code&current=temperature_2m,wind_speed_10m,wind_direction_10m,pressure_msl,weather_code&forecast_days=3&timezone=auto`;try{const res=await fetch(url);if(!res.ok)throw new Error('forecast');const data=await res.json();status.textContent='Meteorología cargada correctamente.';if(data.current){const nowIcon=weatherCodeToIcon(data.current.weather_code,0,data.current.wind_speed_10m||0);current.innerHTML=`<div class="weather-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px"><strong>Ahora</strong><span class="pill">${nowIcon.icon} ${nowIcon.label}</span></div><div class="grid two"><div>Temp: <strong>${data.current.temperature_2m ?? '—'} °C</strong></div><div>Viento: <strong>${data.current.wind_speed_10m ?? '—'} km/h</strong></div><div>Dirección: <strong>${data.current.wind_direction_10m ?? '—'}°</strong></div><div>Presión: <strong>${data.current.pressure_msl ?? '—'} hPa</strong></div></div></div>`;}const alerts=buildWeatherAlerts(data.hourly||{});alertsBox.innerHTML=alerts.length?alerts.map(a=>`<div class="weather-card" style="margin-top:8px">${a}</div>`).join(''):'<div class="weather-card" style="margin-top:8px">No se detectan alertas meteorológicas destacables a corto plazo.</div>';}catch(e){status.textContent='No se ha podido cargar la meteo. En iPhone, esto suele fallar si el HTML se abre desde la vista previa y no desde Safari.';}}
+function buildWeatherAlerts(hourly){
+  const alerts=[],rain=hourly.precipitation||[],temp=hourly.temperature_2m||[],wind=hourly.wind_speed_10m||[],dir=hourly.wind_direction_10m||[],times=hourly.time||[],n=Math.min(times.length,12);
+  for(let i=0;i<n;i++){if((rain[i]||0)>0.6){alerts.push(`🌧️ Se esperan precipitaciones en torno a ${new Date(times[i]).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}.`);break;}}
+  for(let i=1;i<n;i++){if(Math.abs((wind[i]||0)-(wind[0]||0))>=12){alerts.push('💨 Cambio relevante de intensidad de viento dentro de las próximas horas.');break;}}
+  for(let i=1;i<n;i++){if(Math.abs((dir[i]||0)-(dir[0]||0))>=45){alerts.push('🌬️ Posible rolada de viento; puede cambiar qué agua recibe mejor entrada.');break;}}
+  for(let i=1;i<n;i++){if((temp[0]||0)-(temp[i]||0)>=3){alerts.push('🌡️ Posible bajada térmica apreciable en las próximas horas.');break;}}
+  return alerts;
+}
+async function loadWeather(){
+  const lat=parseFloat(document.getElementById('lat').value),lng=parseFloat(document.getElementById('lng').value),status=document.getElementById('weatherStatus'),current=document.getElementById('weatherCurrent'),alertsBox=document.getElementById('weatherAlerts');
+  if(Number.isNaN(lat)||Number.isNaN(lng)){status.textContent='Primero selecciona una zona válida en el mapa.';return;}
+  status.textContent='Cargando meteorología...';
+  current.innerHTML='';
+  alertsBox.innerHTML='';
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,pressure_msl,weather_code&current=temperature_2m,wind_speed_10m,wind_direction_10m,pressure_msl,weather_code&forecast_days=3&timezone=auto`;
+  try{
+    const res=await fetch(url);
+    if(!res.ok)throw new Error('forecast');
+    const data=await res.json();
+    status.textContent='Meteorología cargada correctamente.';
+    if(data.current){
+      const nowIcon=weatherCodeToIcon(data.current.weather_code,0,data.current.wind_speed_10m||0);
+      current.innerHTML=`<div class="weather-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px"><strong>Ahora</strong><span class="pill">${nowIcon.icon} ${nowIcon.label}</span></div><div class="grid two"><div>Temp: <strong>${data.current.temperature_2m ?? '—'} °C</strong></div><div>Viento: <strong>${data.current.wind_speed_10m ?? '—'} km/h</strong></div><div>Dirección: <strong>${data.current.wind_direction_10m ?? '—'}°</strong></div><div>Presión: <strong>${data.current.pressure_msl ?? '—'} hPa</strong></div></div></div>`;
+    }
+    const alerts=buildWeatherAlerts(data.hourly||{});
+    alertsBox.innerHTML=alerts.length?alerts.map(a=>`<div class="weather-card" style="margin-top:8px">${a}</div>`).join(''):'<div class="weather-card" style="margin-top:8px">No se detectan alertas meteorológicas destacables a corto plazo.</div>';
+  }catch(e){
+    status.textContent='No se ha podido cargar la meteo.';
+  }
+}
 let latestStrategy=null;
 function getValues(){return{reservoir:document.getElementById('reservoir').value,region:document.getElementById('region').value,startDate:document.getElementById('startDate').value,endDate:document.getElementById('endDate').value,durationHours:Number(document.getElementById('durationHours').value||48),minWeight:Number(document.getElementById('minWeight').value||2),captureLimit:Number(document.getElementById('captureLimit').value||999),classification:document.getElementById('classification').value,fishingMode:document.getElementById('fishingMode').value,prebaiting:document.getElementById('prebaiting').value,pressure:document.getElementById('pressure').value,objective:document.getElementById('objective').value,approach:document.getElementById('approach').value,zoneType:document.getElementById('zoneType').value,zoneNotes:document.getElementById('zoneNotes').value,baits:document.getElementById('baits').value,prepNotes:document.getElementById('prepNotes').value};}
 function seasonalRead(startDate){if(!startDate)return'época no definida';const month=new Date(startDate).getMonth()+1;if([3,4,5].includes(month))return'primavera';if([6,7,8].includes(month))return'verano';if([9,10,11].includes(month))return'otoño';return'invierno';}
 function contestMode(v){const selective=v.minWeight>=5||v.captureLimit<=5||v.classification==='mejores_capturas';const productive=v.minWeight<=2.5&&v.captureLimit>20;if(selective)return'selectivo';if(productive)return'productivo';return'mixto';}
 function zoneInterpretation(v){if(v.zoneType==='recula')return'Zona previa con potencial de paso y posible concentración si entra agua útil o viento favorable.';if(v.zoneType==='punta')return'La punta puede trabajar como línea de tránsito.';if(v.zoneType==='cortado')return'El cortado suele pedir precisión, menos dispersión y lectura fina.';if(v.zoneType==='playa')return'La playa puede abrir un enfoque más accesible, pero la profundidad real mandará.';if(v.zoneType==='brazo')return'El brazo del embalse puede concentrar movimiento si el escenario acompaña.';return'Zona abierta: dependerá mucho de viento, tráfico de pez y lectura de agua.';}
-function chooseBaseStrategy(v,mode,profile){let scenario='',base='',baiting='',rigs='',planABC='',spotValue='';if(mode==='selectivo'){scenario=`${v.reservoir} en modo selectivo: interesa más la calidad que la cantidad.`;base='Arranque contenido, lectura del concurso y búsqueda de oportunidades de valor.';baiting=v.prebaiting==='si'?'Cebado previo corto y con intención. En concurso, mantener solo tras respuesta.':'Sin cebado previo, entrar preciso y sin abrir el puesto sin información.';rigs='Montajes finos de lectura y dos opciones selectivas: snowman, wafter equilibrado y presentación limpia.';planABC='Plan A: selección. Plan B: equilibrio. Plan C: abrir una línea más productiva si el concurso se seca.';spotValue='La zona debería evaluarse por potencial de media, no por número de toques.';}else if(mode==='productivo'){scenario=`${v.reservoir} en modo productivo: el formato permite construir resultado por ritmo y continuidad.`;base='Buscar regularidad y lectura rápida. Puede merecer una caña fina y otra más selectiva.';baiting=v.prebaiting==='si'?'Crear confianza y tráfico, no una alfombra ciega.':'Entrada algo más abierta, pero siempre medida.';rigs='Una línea rápida de respuesta, una equilibrada y una de selección ligera.';planABC='Plan A: ritmo. Plan B: estabilizar. Plan C: seleccionar si la media sube.';spotValue='La zona vale por continuidad y ventanas de actividad.';}else{scenario=`${v.reservoir} en modo mixto: puede exigir sumar, pero sin regalar media.`;base='Comenzar leyendo. Una línea para producir y otra para buscar media.';baiting='Cebado progresivo, diferenciando atracción y mantenimiento.';rigs='Dos montajes de lectura y una opción claramente selectiva.';planABC='Plan A: lectura. Plan B: producir. Plan C: seleccionar.';spotValue='Zona de lectura; el rendimiento real dependerá de cómo responda.';}if(v.fishingMode==='lance')base+=' Con solo lance, manda mucho más la geometría real del puesto.';if(v.fishingMode==='cebador')base+=' Con barco cebador, gana valor la precisión y el reparto por líneas.';if(v.fishingMode==='barca')base+=' Con barca, sube el valor de microspots y rutas menos obvias.';spotValue+=' '+zoneInterpretation(v);return{scenario,base,baiting,rigs,planABC,spotValue};}
-function createStrategy(){const v=getValues(),profile=reservoirProfiles[v.reservoir],season=seasonalRead(v.startDate),mode=contestMode(v),core=chooseBaseStrategy(v,mode,profile);latestStrategy={values:v,profile,season,mode,core};document.getElementById('strategyOutput').innerHTML=`<div class="strategy-block"><strong>🎯 Escenario</strong><br><br><strong>${v.reservoir}</strong> · ${season} · formato <strong>${mode}</strong>.<br>${core.scenario}</div><div class="strategy-block"><strong>🧠 Lectura del agua</strong><br><br>Perfil: <strong>${profile.nature}</strong>.<br>Dificultad: <strong>${profile.difficulty}</strong>.<br>${profile.comments}</div><div class="strategy-block"><strong>🎣 Estrategia base</strong><br><br>${core.base}</div><div class="strategy-block"><strong>🪣 Cebado</strong><br><br>${core.baiting}</div><div class="strategy-block"><strong>🧰 Montajes</strong><br><br>${core.rigs}</div><div class="strategy-block"><strong>📌 Plan A / B / C</strong><br><br>${core.planABC}</div><div class="strategy-block"><strong>📍 Valor de la zona previa</strong><br><br>${core.spotValue}</div>`;seedChatIntro();}
-const logsKey='carp-demo-logs-v8';
+function chooseBaseStrategy(v,mode,profile){
+  let scenario='',base='',baiting='',rigs='',planABC='',spotValue='';
+  if(mode==='selectivo'){
+    scenario=`${v.reservoir} en modo selectivo: interesa más la calidad que la cantidad.`;
+    base='Arranque contenido, lectura del concurso y búsqueda de oportunidades de valor.';
+    baiting=v.prebaiting==='si'?'Cebado previo corto y con intención. En concurso, mantener solo tras respuesta.':'Sin cebado previo, entrar preciso y sin abrir el puesto sin información.';
+    rigs='Montajes finos de lectura y dos opciones selectivas: snowman, wafter equilibrado y presentación limpia.';
+    planABC='Plan A: selección. Plan B: equilibrio. Plan C: abrir una línea más productiva si el concurso se seca.';
+    spotValue='La zona debería evaluarse por potencial de media, no por número de toques.';
+  }else if(mode==='productivo'){
+    scenario=`${v.reservoir} en modo productivo: el formato permite construir resultado por ritmo y continuidad.`;
+    base='Buscar regularidad y lectura rápida. Puede merecer una caña fina y otra más selectiva.';
+    baiting=v.prebaiting==='si'?'Crear confianza y tráfico, no una alfombra ciega.':'Entrada algo más abierta, pero siempre medida.';
+    rigs='Una línea rápida de respuesta, una equilibrada y una de selección ligera.';
+    planABC='Plan A: ritmo. Plan B: estabilizar. Plan C: seleccionar si la media sube.';
+    spotValue='La zona vale por continuidad y ventanas de actividad.';
+  }else{
+    scenario=`${v.reservoir} en modo mixto: puede exigir sumar, pero sin regalar media.`;
+    base='Comenzar leyendo. Una línea para producir y otra para buscar media.';
+    baiting='Cebado progresivo, diferenciando atracción y mantenimiento.';
+    rigs='Dos montajes de lectura y una opción claramente selectiva.';
+    planABC='Plan A: lectura. Plan B: producir. Plan C: seleccionar.';
+    spotValue='Zona de lectura; el rendimiento real dependerá de cómo responda.';
+  }
+  if(v.fishingMode==='lance')base+=' Con solo lance, manda mucho más la geometría real del puesto.';
+  if(v.fishingMode==='cebador')base+=' Con barco cebador, gana valor la precisión y el reparto por líneas.';
+  if(v.fishingMode==='barca')base+=' Con barca, sube el valor de microspots y rutas menos obvias.';
+  spotValue+=' '+zoneInterpretation(v);
+  return{scenario,base,baiting,rigs,planABC,spotValue};
+}
+function createStrategy(){
+  const v=getValues(),profile=reservoirProfiles[v.reservoir],season=seasonalRead(v.startDate),mode=contestMode(v),core=chooseBaseStrategy(v,mode,profile);
+  latestStrategy={values:v,profile,season,mode,core};
+  document.getElementById('strategyOutput').innerHTML=`<div class="strategy-block"><strong>🎯 Escenario</strong><br><br><strong>${v.reservoir}</strong> · ${season} · formato <strong>${mode}</strong>.<br>${core.scenario}</div><div class="strategy-block"><strong>🧠 Lectura del agua</strong><br><br>Perfil: <strong>${profile.nature}</strong>.<br>Dificultad: <strong>${profile.difficulty}</strong>.<br>${profile.comments}</div><div class="strategy-block"><strong>🎣 Estrategia base</strong><br><br>${core.base}</div><div class="strategy-block"><strong>🪣 Cebado</strong><br><br>${core.baiting}</div><div class="strategy-block"><strong>🧰 Montajes</strong><br><br>${core.rigs}</div><div class="strategy-block"><strong>📌 Plan A / B / C</strong><br><br>${core.planABC}</div><div class="strategy-block"><strong>📍 Valor de la zona previa</strong><br><br>${core.spotValue}</div>`;
+  seedChatIntro();
+}
+const logsKey='carp-demo-logs-v9';
 function getLogs(){return JSON.parse(localStorage.getItem(logsKey)||'[]');}
 function saveLogs(logs){localStorage.setItem(logsKey,JSON.stringify(logs));renderLogs();renderMetrics();}
-function addLog(){const log={id:Date.now(),time:document.getElementById('logTime').value,rod:document.getElementById('logRod').value,bait:document.getElementById('logBait').value,feedType:document.getElementById('logFeedType').value,feedAmount:document.getElementById('logFeedAmount').value,outcome:document.getElementById('logOutcome').value,fishWeight:document.getElementById('logWeight').value,species:document.getElementById('logSpecies').value,observation:document.getElementById('logObservation').value};if(!log.time&&!log.bait&&!log.feedType){alert('Rellena al menos hora, cebo o cebado.');return;}const logs=getLogs();logs.unshift(log);saveLogs(logs);['logTime','logRod','logBait','logFeedType','logFeedAmount','logWeight','logSpecies','logObservation'].forEach(id=>document.getElementById(id).value='');document.getElementById('logOutcome').value='picada';}
+function addLog(){
+  const log={id:Date.now(),time:document.getElementById('logTime').value,rod:document.getElementById('logRod').value,bait:document.getElementById('logBait').value,feedType:document.getElementById('logFeedType').value,feedAmount:document.getElementById('logFeedAmount').value,outcome:document.getElementById('logOutcome').value,fishWeight:document.getElementById('logWeight').value,species:document.getElementById('logSpecies').value,observation:document.getElementById('logObservation').value};
+  if(!log.time&&!log.bait&&!log.feedType){alert('Rellena al menos hora, cebo o cebado.');return;}
+  const logs=getLogs();
+  logs.unshift(log);
+  saveLogs(logs);
+  ['logTime','logRod','logBait','logFeedType','logFeedAmount','logWeight','logSpecies','logObservation'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('logOutcome').value='picada';
+}
 function deleteLog(id){saveLogs(getLogs().filter(x=>x.id!==id));}
 function clearLogs(){if(confirm('¿Seguro que quieres borrar todos los registros?'))saveLogs([]);}
-function renderLogs(){const logs=getLogs(),el=document.getElementById('logList');if(!logs.length){el.innerHTML='<div class="log-item muted">Todavía no hay eventos guardados.</div>';return;}el.innerHTML=logs.map(item=>`<div class="log-item"><div><strong>${item.outcome}</strong> · ${item.time||'Sin hora'} ${item.rod ? '· '+item.rod : ''}</div><div class="muted" style="margin-top:6px">Cebo: ${item.bait||'—'} · Cebado: ${item.feedType||'—'} ${item.feedAmount||''}</div>${item.species?`<div class="muted">Especie: ${item.species}</div>`:''}${item.fishWeight?`<div class="muted">Peso: ${item.fishWeight} kg</div>`:''}${item.observation?`<div class="muted">${item.observation}</div>`:''}<div style="margin-top:8px"><button class="btn-ghost" onclick="deleteLog(${item.id})">Eliminar</button></div></div>`).join('');}
-function renderMetrics(){const logs=getLogs();const totalBites=logs.filter(l=>l.outcome==='picada').length;const totalCaptures=logs.filter(l=>l.outcome==='captura').length;const totalWeight=logs.reduce((acc,l)=>acc+(parseFloat(l.fishWeight)||0),0);const baitCount={};logs.forEach(l=>{const key=l.bait||'Sin datos';baitCount[key]=(baitCount[key]||0)+1;});const topBait=Object.entries(baitCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Sin datos';document.getElementById('mBites').textContent=totalBites;document.getElementById('mCaptures').textContent=totalCaptures;document.getElementById('mWeight').textContent=totalWeight.toFixed(1)+' kg';document.getElementById('mTopBait').textContent=topBait;}
-function addMessage(role,text){const history=document.getElementById('chatHistory');const div=document.createElement('div');div.className='chat-item '+(role==='user'?'chat-user':'');div.innerHTML=`<strong>${role==='user'?'Tú':'Copiloto'}</strong><br><div style="margin-top:6px">${text}</div>`;history.appendChild(div);history.scrollTop=history.scrollHeight;}
-function seedChatIntro(){const history=document.getElementById('chatHistory');history.innerHTML='';addMessage('ai','Ya tengo un escenario base. Ahora podemos discutir alternativas: ritmo vs selección, reparto por cañas o interpretación de la zona.');}
-function answerStrategicQuestion(question){if(!latestStrategy)return'Primero genera una estrategia previa.';const q=question.toLowerCase(),s=latestStrategy;if(q.includes('muchas picadas')||q.includes('buscar muchas')){return s.mode==='selectivo'?'Sí, pero mejor como estrategia híbrida: una línea para ritmo y dos líneas para seguir buscando media.':'En este formato sí puede tener mucho sentido buscar muchas oportunidades, dejando una línea algo más selectiva.';}if(q.includes('caña')||q.includes('cañas'))return'Piensa por rol de caña: una de lectura/ritmo, una equilibrada y una selectiva.';if(q.includes('zona')||q.includes('mapa')||q.includes('recula')||q.includes('punta'))return'La zona previa no te da el puesto, pero sí un marco táctico. Su valor está en orientar tu lectura antes del sorteo.';return'La app debe darte una estrategia principal y una alternativa razonada, no una sola verdad rígida.';}
-function askQuestion(){const input=document.getElementById('chatInput');const text=input.value.trim();if(!text)return;addMessage('user',text);addMessage('ai',answerStrategicQuestion(text));input.value='';}
-function loadScenarioA(){document.getElementById('reservoir').value='Sierra Brava';document.getElementById('startDate').value='2026-04-24';document.getElementById('endDate').value='2026-04-26';document.getElementById('durationHours').value='48';document.getElementById('minWeight').value='5';document.getElementById('captureLimit').value='3';document.getElementById('classification').value='mejores_capturas';document.getElementById('fishingMode').value='cebador';document.getElementById('prebaiting').value='si';document.getElementById('pressure').value='alta';document.getElementById('objective').value='ganar';document.getElementById('approach').value='equilibrado';document.getElementById('zoneType').value='recula';document.getElementById('zoneNotes').value='Zona previa de recula abierta al viento lateral';document.getElementById('baits').value='scopex, fishmeal suave, wafter, pellet, chufa';document.getElementById('prepNotes').value='Busco competir arriba, pero sin regalar el concurso por ir demasiado cerrado.';setMarker(39.394000,-5.800000);showSatellite();}
-function loadScenarioB(){document.getElementById('reservoir').value='Sierra Brava';document.getElementById('startDate').value='2026-04-24';document.getElementById('endDate').value='2026-04-26';document.getElementById('durationHours').value='48';document.getElementById('minWeight').value='2';document.getElementById('captureLimit').value='999';document.getElementById('classification').value='peso_total';document.getElementById('fishingMode').value='cebador';document.getElementById('prebaiting').value='si';document.getElementById('pressure').value='alta';document.getElementById('objective').value='ganar';document.getElementById('approach').value='agresivo';document.getElementById('zoneType').value='abierta';document.getElementById('zoneNotes').value='Zona abierta con agua batida';document.getElementById('baits').value='scopex, maíz, pellet, fishmeal suave, chufa';document.getElementById('prepNotes').value='Quiero un concurso de ritmo sin cerrar la puerta a una buena.';setMarker(39.394000,-5.800000);showSatellite();}
-document.getElementById('btnLocate').addEventListener('click',()=>{if(!navigator.geolocation){alert('Tu navegador no soporta geolocalización.');return;}navigator.geolocation.getCurrentPosition(pos=>setMarker(pos.coords.latitude,pos.coords.longitude),()=>alert('No se pudo obtener la ubicación.'));});
+function renderLogs(){
+  const logs=getLogs(),el=document.getElementById('logList');
+  if(!logs.length){el.innerHTML='<div class="log-item muted">Todavía no hay eventos guardados.</div>';return;}
+  el.innerHTML=logs.map(item=>`<div class="log-item"><div><strong>${item.outcome}</strong> · ${item.time||'Sin hora'} ${item.rod ? '· '+item.rod : ''}</div><div class="muted" style="margin-top:6px">Cebo: ${item.bait||'—'} · Cebado: ${item.feedType||'—'} ${item.feedAmount||''}</div>${item.species?`<div class="muted">Especie: ${item.species}</div>`:''}${item.fishWeight?`<div class="muted">Peso: ${item.fishWeight} kg</div>`:''}${item.observation?`<div class="muted">${item.observation}</div>`:''}<div style="margin-top:8px"><button class="btn-ghost" onclick="deleteLog(${item.id})">Eliminar</button></div></div>`).join('');
+}
+function renderMetrics(){
+  const logs=getLogs();
+  const totalBites=logs.filter(l=>l.outcome==='picada').length;
+  const totalCaptures=logs.filter(l=>l.outcome==='captura').length;
+  const totalWeight=logs.reduce((acc,l)=>acc+(parseFloat(l.fishWeight)||0),0);
+  const baitCount={};
+  logs.forEach(l=>{const key=l.bait||'Sin datos';baitCount[key]=(baitCount[key]||0)+1;});
+  const topBait=Object.entries(baitCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Sin datos';
+  document.getElementById('mBites').textContent=totalBites;
+  document.getElementById('mCaptures').textContent=totalCaptures;
+  document.getElementById('mWeight').textContent=totalWeight.toFixed(1)+' kg';
+  document.getElementById('mTopBait').textContent=topBait;
+}
+function addMessage(role,text){
+  const history=document.getElementById('chatHistory');
+  const div=document.createElement('div');
+  div.className='chat-item '+(role==='user'?'chat-user':'');
+  div.innerHTML=`<strong>${role==='user'?'Tú':'Copiloto'}</strong><br><div style="margin-top:6px">${text}</div>`;
+  history.appendChild(div);
+  history.scrollTop=history.scrollHeight;
+}
+function seedChatIntro(){
+  const history=document.getElementById('chatHistory');
+  history.innerHTML='';
+  addMessage('ai','Ya tengo un escenario base. Ahora podemos discutir alternativas: ritmo vs selección, reparto por cañas o interpretación de la zona.');
+}
+function answerStrategicQuestion(question){
+  if(!latestStrategy)return'Primero genera una estrategia previa.';
+  const q=question.toLowerCase(),s=latestStrategy;
+  if(q.includes('muchas picadas')||q.includes('buscar muchas')){
+    return s.mode==='selectivo'?'Sí, pero mejor como estrategia híbrida: una línea para ritmo y dos líneas para seguir buscando media.':'En este formato sí puede tener mucho sentido buscar muchas oportunidades, dejando una línea algo más selectiva.';
+  }
+  if(q.includes('caña')||q.includes('cañas'))return'Piensa por rol de caña: una de lectura/ritmo, una equilibrada y una selectiva.';
+  if(q.includes('zona')||q.includes('mapa')||q.includes('recula')||q.includes('punta'))return'La zona previa no te da el puesto, pero sí un marco táctico. Su valor está en orientar tu lectura antes del sorteo.';
+  return'La app debe darte una estrategia principal y una alternativa razonada, no una sola verdad rígida.';
+}
+function askQuestion(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  addMessage('user',text);
+  addMessage('ai',answerStrategicQuestion(text));
+  input.value='';
+}
+function loadScenarioA(){
+  document.getElementById('reservoir').value='Sierra Brava';
+  document.getElementById('startDate').value='2026-04-24';
+  document.getElementById('endDate').value='2026-04-26';
+  document.getElementById('durationHours').value='48';
+  document.getElementById('minWeight').value='5';
+  document.getElementById('captureLimit').value='3';
+  document.getElementById('classification').value='mejores_capturas';
+  document.getElementById('fishingMode').value='cebador';
+  document.getElementById('prebaiting').value='si';
+  document.getElementById('pressure').value='alta';
+  document.getElementById('objective').value='ganar';
+  document.getElementById('approach').value='equilibrado';
+  document.getElementById('zoneType').value='recula';
+  document.getElementById('zoneNotes').value='Zona previa de recula abierta al viento lateral';
+  document.getElementById('baits').value='scopex, fishmeal suave, wafter, pellet, chufa';
+  document.getElementById('prepNotes').value='Busco competir arriba, pero sin regalar el concurso por ir demasiado cerrado.';
+  setMarker(39.394000,-5.800000);
+  showSatellite();
+}
+function loadScenarioB(){
+  document.getElementById('reservoir').value='Sierra Brava';
+  document.getElementById('startDate').value='2026-04-24';
+  document.getElementById('endDate').value='2026-04-26';
+  document.getElementById('durationHours').value='48';
+  document.getElementById('minWeight').value='2';
+  document.getElementById('captureLimit').value='999';
+  document.getElementById('classification').value='peso_total';
+  document.getElementById('fishingMode').value='cebador';
+  document.getElementById('prebaiting').value='si';
+  document.getElementById('pressure').value='alta';
+  document.getElementById('objective').value='ganar';
+  document.getElementById('approach').value='agresivo';
+  document.getElementById('zoneType').value='abierta';
+  document.getElementById('zoneNotes').value='Zona abierta con agua batida';
+  document.getElementById('baits').value='scopex, maíz, pellet, fishmeal suave, chufa';
+  document.getElementById('prepNotes').value='Quiero un concurso de ritmo sin cerrar la puerta a una buena.';
+  setMarker(39.394000,-5.800000);
+  showSatellite();
+}
+document.getElementById('btnLocate').addEventListener('click',()=>{
+  if(!navigator.geolocation){alert('Tu navegador no soporta geolocalización.');return;}
+  navigator.geolocation.getCurrentPosition(pos=>setMarker(pos.coords.latitude,pos.coords.longitude),()=>alert('No se pudo obtener la ubicación.'));
+});
 document.getElementById('btnForecast').addEventListener('click',loadWeather);
 document.getElementById('btnNormal').addEventListener('click',showNormal);
 document.getElementById('btnSatellite').addEventListener('click',showSatellite);
@@ -184,7 +687,11 @@ document.getElementById('btnLoadScenarioA').addEventListener('click',loadScenari
 document.getElementById('btnLoadScenarioB').addEventListener('click',loadScenarioB);
 document.getElementById('addLog').addEventListener('click',addLog);
 document.getElementById('clearLogs').addEventListener('click',clearLogs);
-initMap();renderLogs();renderMetrics();window.deleteLog=deleteLog;
+
+initMap();
+renderLogs();
+renderMetrics();
+window.deleteLog=deleteLog;
 </script>
 </body>
 </html>
